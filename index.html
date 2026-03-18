@@ -83,18 +83,18 @@ body{background:#06090f;color:var(--text);font-family:'Exo 2',sans-serif;display
 
 /* STAT CARDS */
 .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
-.sc{background:rgba(6,14,26,0.32);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(0,210,255,0.25);border-radius:10px;padding:13px 15px;position:relative;overflow:hidden;transition:border-color .3s,transform .2s;box-shadow:0 4px 24px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.06);}
+.sc{background:rgba(6,14,26,0.32);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border:1px solid rgba(0,210,255,0.25);border-radius:10px;padding:20px 20px;position:relative;overflow:hidden;transition:border-color .3s,transform .2s;box-shadow:0 4px 24px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.06);}
 .sc:hover{border-color:rgba(0,210,255,0.4);transform:translateY(-2px);}
 .sc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:.7;}
 .sl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px;display:flex;align-items:center;justify-content:space-between;}
-.sv2{font-family:'Share Tech Mono',monospace;font-size:23px;color:var(--text);}
+.sv2{font-family:'Share Tech Mono',monospace;font-size:28px;color:var(--text);}
 .sv2.g{color:var(--green);background:none;backdrop-filter:none;border:none;border-radius:0;padding:0;}
 .sv2.pk{color:#ff6bab;}
 .ss{font-size:9px;color:var(--text-dim);margin-top:2px;}
 
 /* TABS */
 .tabs{display:flex;gap:2px;border-bottom:1px solid var(--gbl);}
-.tab{padding:7px 14px;font-size:12px;font-weight:600;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.4px;}
+.tab{padding:11px 18px;font-size:12px;font-weight:600;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.4px;}
 .tab:hover{color:var(--text);}
 .tab.act{color:var(--cyan);border-bottom-color:var(--cyan);}
 
@@ -129,10 +129,10 @@ body{background:#06090f;color:var(--text);font-family:'Exo 2',sans-serif;display
 .afoot{margin-top:7px;font-size:11px;color:var(--text-dim);font-style:italic;border-top:1px solid rgba(0,200,255,0.07);padding-top:9px;}
 
 /* RIGHT PANEL */
-.rp{width:234px;min-width:234px;overflow-y:auto;background:rgba(4,8,18,0.55);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);border-left:1px solid rgba(0,210,255,0.25);}
+.rp{width:250px;min-width:250px;overflow-y:auto;background:rgba(6,14,26,0.38);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);border-left:1px solid rgba(0,210,255,0.28);}
 .rp::-webkit-scrollbar{width:3px;}
 .rp::-webkit-scrollbar-thumb{background:rgba(0,200,255,0.12);}
-.rps{border-bottom:1px solid var(--gbl);padding:13px;}
+.rps{border-bottom:1px solid var(--gbl);padding:18px;}
 .rpt{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;display:flex;align-items:center;gap:6px;margin-bottom:11px;}
 .rptg{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .rpl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px;}
@@ -319,9 +319,7 @@ document.querySelectorAll('.ni').forEach(n=>n.onclick=()=>{document.querySelecto
     return mesh;
   }
   const orb1=orb(0x1a4bcc,-9, 3,-8,3.5);   /* blue left */
-  const orb2=orb(0x00c8ff, 0,-2,-10,3.5);  /* cyan center */
-  const orb3=orb(0x006655, 8, 4,-12,2.0);  /* teal right - much darker + further back */
-  const orb4=orb(0x004433,-4,-5,-16,1.5);  /* green bottom - very subtle */
+  const orb2=orb(0x00aadd, 4,-2,-10,3.5);  /* cyan center */
 
   /* ── LOGO PLANES ── */
   const group=new THREE.Group();
@@ -395,11 +393,8 @@ document.querySelectorAll('.ni').forEach(n=>n.onclick=()=>{document.querySelecto
     const pu2=(Math.sin(t*1.6+1)+1)/2;
     orb1.material.opacity=0.4+pu*0.2;
     orb2.material.opacity=0.3+pu2*0.2;
-    orb3.material.opacity=0.18+pu*0.08;
-    orb4.material.opacity=0.12+pu2*0.06;
     /* slow orb drift */
     orb1.position.x=-9+Math.sin(t*0.3)*1.5;
-    orb3.position.x= 8+Math.sin(t*0.4)*1.2;
     orb2.position.y=-2+Math.sin(t*0.35)*1;
     /* logo opacity pulse */
     const mats=group.userData.mats;
