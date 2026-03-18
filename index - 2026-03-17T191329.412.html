@@ -1,330 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MX1 – Fusion Autonomy</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
-  :root {
-    --blue: #3a6fe8;
-    --blue-light: #5b9fff;
-    --cyan: #00c8ff;
-    --teal: #00d4aa;
-    --green: #00e87a;
-    --green-dark: #00b85e;
-    --bg: #090d14;
-    --bg2: #0d1520;
-    --bg3: #111c2a;
-    --bg4: #162030;
-    --border: rgba(0,200,255,0.13);
-    --text: #c8dff5;
-    --text-dim: #5a7a99;
-    --pink: #ff2d78;
-    --grad: linear-gradient(135deg, var(--blue) 0%, var(--cyan) 40%, var(--teal) 70%, var(--green) 100%);
-    --grad-soft: linear-gradient(135deg, rgba(58,111,232,0.15) 0%, rgba(0,232,122,0.08) 100%);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Exo 2', sans-serif; display: flex; min-height: 100vh; overflow: hidden; }
+:root {
+  --blue:#3a6fe8; --blue-light:#5b9fff; --cyan:#00c8ff;
+  --teal:#00d4aa; --green:#00e87a;
+  --bg:#06090f; --border:rgba(0,210,255,0.18);
+  --text:#cce4f7; --text-dim:#4e7090; --pink:#ff2d78;
+  --grad:linear-gradient(135deg,#3a6fe8 0%,#00c8ff 40%,#00d4aa 70%,#00e87a 100%);
+  --gb:rgba(8,16,28,0.52);
+  --gbl:rgba(0,210,255,0.2);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;display:flex;}
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
-  /* ── SIDEBAR ── */
-  .sidebar {
-    width: 210px; min-width: 210px; background: var(--bg2); border-right: 1px solid var(--border);
-    display: flex; flex-direction: column; padding: 0; position: relative; z-index: 10;
-  }
-  .sidebar::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:3px;
-    background: var(--grad);
-  }
-  .sidebar-brand {
-    padding: 20px 16px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .brand-icon {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: var(--grad);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 13px; color: #fff;
-    flex-shrink: 0;
-  }
-  .brand-name { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 1px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .brand-sub { font-size: 10px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; margin-top: 1px; }
-  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); margin-left: auto; flex-shrink: 0; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+/* glass util */
+.g{background:var(--gb);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid var(--gbl);}
 
-  .sidebar-section { padding: 14px 16px 6px; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); }
-  .nav-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 16px; font-size: 13px; font-weight: 500; color: var(--text-dim);
-    cursor: pointer; transition: all .2s; border-left: 3px solid transparent; margin: 1px 0;
-  }
-  .nav-item:hover { color: var(--text); background: var(--grad-soft); }
-  .nav-item.active { color: var(--cyan); border-left-color: var(--cyan); background: rgba(0,200,255,0.07); }
-  .nav-icon { font-size: 14px; width: 18px; text-align: center; }
+/* SIDEBAR */
+.sb{width:210px;min-width:210px;position:relative;z-index:10;display:flex;flex-direction:column;background:rgba(5,10,20,0.72);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-right:1px solid var(--gbl);}
+.sb::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad);}
+.sb-brand{padding:20px 16px 16px;border-bottom:1px solid var(--gbl);display:flex;align-items:center;gap:10px;}
+.b-ico{width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;color:#fff;flex-shrink:0;}
+.b-name{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:17px;letter-spacing:1px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.b-sub{font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-top:1px;}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);margin-left:auto;animation:p 2s infinite;}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.4}}
+.sb-sec{padding:14px 16px 6px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;font-weight:500;color:var(--text-dim);cursor:pointer;transition:all .2s;border-left:3px solid transparent;}
+.ni:hover{color:var(--text);background:rgba(0,200,255,0.06);}
+.ni.act{color:var(--cyan);border-left-color:var(--cyan);background:rgba(0,200,255,0.09);}
+.ni-ico{font-size:14px;width:18px;text-align:center;}
+.sb-ft{margin-top:auto;border-top:1px solid var(--gbl);padding:12px 16px;}
+.sr{display:flex;justify-content:space-between;font-size:11px;padding:3px 0;}
+.sk{color:var(--text-dim);}
+.sv{font-family:'Share Tech Mono',monospace;font-size:11px;}
+.sv.on{color:var(--green);}.sv.off{color:var(--text-dim);}
+.lo{display:flex;align-items:center;gap:8px;padding:10px 0 0;color:var(--text-dim);font-size:12px;cursor:pointer;transition:color .2s;}
+.lo:hover{color:var(--pink);}
 
-  .sidebar-footer { margin-top: auto; border-top: 1px solid var(--border); padding: 12px 16px; }
-  .sys-row { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; }
-  .sys-label { color: var(--text-dim); }
-  .sys-val { font-family: 'Share Tech Mono', monospace; font-size: 11px; }
-  .sys-val.online { color: var(--green); }
-  .sys-val.off { color: var(--text-dim); }
-  .logout { display: flex; align-items: center; gap: 8px; padding: 10px 0 0; color: var(--text-dim); font-size: 12px; cursor: pointer; transition: color .2s; }
-  .logout:hover { color: var(--pink); }
+/* MAIN */
+.mn{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1;}
 
-  /* ── MAIN ── */
-  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+/* TOPBAR */
+.tb{height:56px;display:flex;align-items:center;padding:0 18px;gap:12px;flex-shrink:0;background:rgba(5,10,20,0.68);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--gbl);}
+.lt{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:20px;letter-spacing:2px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.lr{width:30px;height:30px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;}
+.lr::before{content:'';position:absolute;inset:0;border-radius:50%;background:var(--grad);}
+.lr span{position:relative;z-index:1;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:10px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.clk{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--cyan);background:rgba(0,200,255,0.07);padding:4px 9px;border-radius:4px;border:1px solid rgba(0,200,255,0.2);display:flex;align-items:center;gap:5px;}
+.cdot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);animation:p 2s infinite;}
+.bb{background:rgba(0,200,255,0.06);border:1px solid var(--gbl);border-radius:6px;padding:5px 11px;}
+.bl{font-size:9px;color:var(--text-dim);letter-spacing:1.5px;text-transform:uppercase;}
+.bv{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text);}
+.bs{font-size:9px;color:var(--text-dim);}
+.pb{background:rgba(0,232,122,0.06);border:1px solid rgba(0,232,122,0.2);border-radius:6px;padding:5px 11px;}
+.pp{color:var(--green);font-family:'Share Tech Mono',monospace;font-size:13px;}
+.tr{margin-left:auto;display:flex;align-items:center;gap:9px;}
+.mt{display:flex;background:rgba(0,200,255,0.06);border:1px solid var(--gbl);border-radius:6px;overflow:hidden;font-size:11px;}
+.mb{padding:5px 11px;cursor:pointer;color:var(--text-dim);transition:all .2s;font-weight:600;letter-spacing:.5px;}
+.mb.act{background:var(--grad);color:#fff;}
+.bdg{padding:4px 9px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px;display:flex;align-items:center;gap:4px;}
+.bon{background:rgba(0,232,122,0.1);border:1px solid rgba(0,232,122,0.35);color:var(--green);}
+.bkl{background:rgba(255,45,120,0.08);border:1px solid rgba(255,45,120,0.3);color:var(--pink);}
+.bd{width:6px;height:6px;border-radius:50%;background:currentColor;animation:p 1.5s infinite;}
+.cb{padding:6px 13px;border-radius:5px;font-size:12px;font-weight:700;background:var(--grad);color:#fff;border:none;cursor:pointer;letter-spacing:.5px;transition:opacity .2s;}
+.cb:hover{opacity:.85;}
 
-  /* ── TOPBAR ── */
-  .topbar {
-    height: 56px; background: var(--bg2); border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; padding: 0 20px; gap: 16px; flex-shrink: 0;
-  }
-  .logo-text { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 2px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .logo-ring { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; background: var(--grad) border-box; display:flex; align-items:center; justify-content:center; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:11px; color:#fff; background-clip: padding-box; position:relative; }
-  .logo-ring::before { content:''; position:absolute; inset:-2px; border-radius:50%; background:var(--grad); z-index:-1; }
-  .logo-ring span { position: relative; z-index:1; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-size:10px; }
+/* CONTENT */
+.ct{flex:1;display:flex;overflow:hidden;}
+.cp{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:11px;}
+.cp::-webkit-scrollbar{width:3px;}
+.cp::-webkit-scrollbar-thumb{background:rgba(0,200,255,0.18);border-radius:2px;}
 
-  .clock { font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--cyan); background: rgba(0,200,255,0.08); padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(0,200,255,0.2); display:flex; align-items:center; gap:6px; }
-  .clock-dot { width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 6px var(--green); animation:pulse 2s infinite; }
+/* STAT CARDS */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.sc{background:rgba(7,15,28,0.52);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--gbl);border-radius:10px;padding:13px 15px;position:relative;overflow:hidden;transition:border-color .3s,transform .2s;box-shadow:0 4px 20px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.03);}
+.sc:hover{border-color:rgba(0,210,255,0.4);transform:translateY(-2px);}
+.sc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:.7;}
+.sl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px;display:flex;align-items:center;justify-content:space-between;}
+.sv2{font-family:'Share Tech Mono',monospace;font-size:23px;color:var(--text);}
+.sv2.g{color:var(--green);background:none;backdrop-filter:none;border:none;border-radius:0;padding:0;}
+.sv2.pk{color:#ff6bab;}
+.ss{font-size:9px;color:var(--text-dim);margin-top:2px;}
 
-  .balance-block { background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; padding: 5px 14px; }
-  .bal-label { font-size: 9px; color: var(--text-dim); letter-spacing: 1.5px; text-transform: uppercase; }
-  .bal-val { font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--text); }
-  .bal-sub { font-size: 10px; color: var(--text-dim); }
+/* TABS */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--gbl);}
+.tab{padding:7px 14px;font-size:12px;font-weight:600;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.4px;}
+.tab:hover{color:var(--text);}
+.tab.act{color:var(--cyan);border-bottom-color:var(--cyan);}
 
-  .pnl-block { background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; padding: 5px 14px; }
-  .pnl-pos { color: var(--green); font-family: 'Share Tech Mono', monospace; font-size: 14px; }
+/* GLASS PANELS */
+.pnl{background:rgba(7,15,28,0.48);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid var(--gbl);border-radius:10px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.04);transition:border-color .3s;}
+.pnl:hover{border-color:rgba(0,210,255,0.34);}
+.ph{padding:12px 17px;border-bottom:1px solid var(--gbl);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;background:rgba(0,200,255,0.04);}
+.pb2{padding:15px 17px;}
 
-  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-  .mode-toggle { display: flex; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; font-size: 11px; }
-  .mode-btn { padding: 5px 12px; cursor: pointer; color: var(--text-dim); transition: all .2s; font-weight: 600; letter-spacing: .5px; }
-  .mode-btn.active { background: var(--grad); color: #fff; }
+/* FORM */
+.fg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:11px;}
+.fg2{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:11px;}
+.fgrp{display:flex;flex-direction:column;gap:4px;}
+.fl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);}
+.fc{background:rgba(0,200,255,0.05);border:1px solid rgba(0,200,255,0.14);border-radius:5px;padding:7px 9px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;transition:border-color .2s;appearance:none;width:100%;}
+.fc:focus{border-color:var(--cyan);background:rgba(0,200,255,0.09);}
+.rb{width:100%;padding:12px;border-radius:7px;border:none;cursor:pointer;background:var(--grad);color:#fff;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;transition:opacity .2s,transform .15s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 0 30px rgba(0,200,255,0.22),0 4px 16px rgba(0,0,0,0.35);}
+.rb:hover{opacity:.88;transform:translateY(-1px);}
 
-  .badge { padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: 1px; display:flex; align-items:center; gap:5px; }
-  .badge-online { background: rgba(0,232,122,0.12); border: 1px solid var(--green); color: var(--green); }
-  .badge-kill { background: rgba(255,45,120,0.1); border: 1px solid var(--pink); color: var(--pink); }
-  .badge-dot { width:6px; height:6px; border-radius:50%; background:currentColor; animation:pulse 1.5s infinite; }
+/* AGENTS */
+.ar{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid rgba(0,200,255,0.07);font-size:13px;}
+.ar:last-child{border-bottom:none;}
+.adot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+.an{font-weight:700;}
+.an.b{color:var(--blue-light);}
+.an.c{color:var(--cyan);}
+.an.t{color:var(--teal);}
+.an.g2{color:var(--green);}
+.ad{color:var(--text-dim);margin-left:3px;}
+.anote{margin-top:11px;font-size:11px;color:var(--text-dim);font-style:italic;}
+.anote b{color:var(--cyan);font-style:normal;}
+.afoot{margin-top:7px;font-size:11px;color:var(--text-dim);font-style:italic;border-top:1px solid rgba(0,200,255,0.07);padding-top:9px;}
 
-  .connect-btn {
-    padding: 6px 14px; border-radius: 5px; font-size: 12px; font-weight: 700;
-    background: var(--grad); color: #fff; border: none; cursor: pointer;
-    letter-spacing: .5px; transition: opacity .2s;
-  }
-  .connect-btn:hover { opacity: .85; }
-  .bell { color: var(--text-dim); font-size: 16px; cursor: pointer; }
+/* RIGHT PANEL */
+.rp{width:234px;min-width:234px;overflow-y:auto;background:rgba(5,11,22,0.6);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-left:1px solid var(--gbl);}
+.rp::-webkit-scrollbar{width:3px;}
+.rp::-webkit-scrollbar-thumb{background:rgba(0,200,255,0.12);}
+.rps{border-bottom:1px solid var(--gbl);padding:13px;}
+.rpt{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;display:flex;align-items:center;gap:6px;margin-bottom:11px;}
+.rptg{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.rpl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px;}
+.rs{width:100%;background:rgba(0,200,255,0.05);border:1px solid rgba(0,200,255,0.14);border-radius:5px;padding:6px 9px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;margin-bottom:9px;appearance:none;cursor:pointer;}
+.rr{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px;}
+.ri{background:rgba(0,200,255,0.05);border:1px solid rgba(0,200,255,0.14);border-radius:5px;padding:6px 8px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;width:100%;}
+.ri:focus{border-color:var(--cyan);}
+.plb{width:100%;padding:9px;border-radius:5px;border:none;cursor:pointer;background:var(--grad);color:#fff;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1.5px;margin-top:3px;box-shadow:0 0 14px rgba(0,232,122,0.18);}
+.plb:hover{opacity:.88;}
+.hr{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;}
+.hk{color:var(--text-dim);}
+.hv{font-family:'Share Tech Mono',monospace;font-size:12px;}
+.hv.c{color:var(--cyan);}.hv.g{color:var(--green);}
+.hbar{height:3px;border-radius:2px;background:rgba(0,200,255,0.08);margin-top:7px;overflow:hidden;}
+.hfill{height:100%;border-radius:2px;background:var(--grad);width:78%;}
+.kbdg{text-align:center;padding:8px;border-radius:5px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:1.5px;background:rgba(255,45,120,0.06);border:1px solid rgba(255,45,120,0.18);color:var(--text-dim);margin-top:3px;}
 
-  /* ── CONTENT ── */
-  .content { flex: 1; display: flex; overflow: hidden; }
-  .center-panel { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-  .center-panel::-webkit-scrollbar { width: 4px; }
-  .center-panel::-webkit-scrollbar-track { background: transparent; }
-  .center-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-  /* ── STAT CARDS ── */
-  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .stat-card {
-    background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
-    padding: 14px 16px; position: relative; overflow: hidden;
-  }
-  .stat-card::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--grad); opacity:.6; }
-  .stat-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; display:flex; align-items:center; justify-content:space-between; }
-  .stat-icon { font-size: 14px; }
-  .stat-val { font-family: 'Share Tech Mono', monospace; font-size: 24px; color: var(--text); }
-  .stat-val.green { color: var(--green); }
-  .stat-val.pink { color: #ff6bab; }
-  .stat-sub { font-size: 10px; color: var(--text-dim); margin-top: 3px; }
-
-  /* ── TABS ── */
-  .tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--border); }
-  .tab { padding: 8px 16px; font-size: 12px; font-weight: 600; color: var(--text-dim); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; letter-spacing: .5px; }
-  .tab:hover { color: var(--text); }
-  .tab.active { color: var(--cyan); border-bottom-color: var(--cyan); }
-
-  /* ── PANEL ── */
-  .panel { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-  .panel-header { padding: 14px 18px; border-bottom: 1px solid var(--border); font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 1px; background: var(--grad-soft); }
-  .panel-body { padding: 18px; }
-
-  /* ── FUSION RUN FORM ── */
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-  .form-group { display: flex; flex-direction: column; gap: 5px; }
-  .form-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); }
-  .form-control {
-    background: var(--bg3); border: 1px solid var(--border); border-radius: 5px;
-    padding: 8px 12px; color: var(--text); font-family: 'Share Tech Mono', monospace; font-size: 13px;
-    outline: none; transition: border-color .2s; appearance: none;
-  }
-  .form-control:focus { border-color: var(--cyan); }
-  select.form-control { cursor: pointer; }
-  .form-grid2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-
-  .run-btn {
-    width: 100%; padding: 13px; border-radius: 6px; border: none; cursor: pointer;
-    background: var(--grad); color: #fff; font-family: 'Rajdhani', sans-serif;
-    font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-    transition: opacity .2s; display: flex; align-items: center; justify-content: center; gap: 8px;
-    box-shadow: 0 0 20px rgba(0,200,255,0.2);
-  }
-  .run-btn:hover { opacity: .88; }
-
-  /* ── AI EXPLANATION ── */
-  .ai-section { margin-top: 16px; }
-  .ai-title { font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 1px; display:flex; align-items:center; gap:8px; margin-bottom: 12px; }
-  .ai-title-icon { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .agent-row { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
-  .agent-row:last-child { border-bottom: none; }
-  .agent-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
-  .agent-name { font-weight: 700; }
-  .agent-name.blue { color: var(--blue-light); }
-  .agent-name.cyan { color: var(--cyan); }
-  .agent-name.teal { color: var(--teal); }
-  .agent-name.green { color: var(--green); }
-  .agent-desc { color: var(--text-dim); margin-left: 4px; }
-  .ai-note { margin-top: 14px; font-size: 11px; color: var(--text-dim); font-style: italic; }
-  .ai-note b { color: var(--cyan); font-style: normal; }
-  .ai-footer { margin-top: 8px; font-size: 11px; color: var(--text-dim); font-style: italic; border-top: 1px solid var(--border); padding-top: 10px; }
-
-  /* ── RIGHT PANEL ── */
-  .right-panel {
-    width: 240px; min-width: 240px; background: var(--bg2); border-left: 1px solid var(--border);
-    display: flex; flex-direction: column; overflow-y: auto; padding: 0;
-  }
-  .right-panel::-webkit-scrollbar { width: 3px; }
-  .right-panel::-webkit-scrollbar-thumb { background: var(--border); }
-
-  .rp-section { border-bottom: 1px solid var(--border); padding: 14px; }
-  .rp-title { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 1px; display:flex; align-items:center; gap:6px; margin-bottom: 12px; }
-  .rp-title-icon { background: var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-
-  .rp-label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 5px; }
-  .rp-select {
-    width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 5px;
-    padding: 7px 10px; color: var(--text); font-family: 'Share Tech Mono', monospace; font-size: 12px;
-    outline: none; margin-bottom: 10px; appearance: none; cursor: pointer;
-  }
-  .rp-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-  .rp-input {
-    background: var(--bg3); border: 1px solid var(--border); border-radius: 5px;
-    padding: 7px 10px; color: var(--text); font-family: 'Share Tech Mono', monospace; font-size: 12px;
-    outline: none; width: 100%;
-  }
-  .place-btn {
-    width: 100%; padding: 10px; border-radius: 5px; border: none; cursor: pointer;
-    background: var(--grad); color: #fff; font-family: 'Rajdhani', sans-serif;
-    font-size: 13px; font-weight: 700; letter-spacing: 1.5px; margin-top: 4px;
-    box-shadow: 0 0 14px rgba(0,232,122,0.2);
-  }
-  .place-btn:hover { opacity: .88; }
-
-  .health-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; }
-  .health-key { color: var(--text-dim); }
-  .health-val { font-family: 'Share Tech Mono', monospace; font-size: 12px; }
-  .health-val.cyan { color: var(--cyan); }
-  .health-val.green { color: var(--green); }
-  .health-bar { height: 3px; border-radius: 2px; background: var(--bg4); margin-top: 8px; overflow: hidden; }
-  .health-fill { height: 100%; border-radius: 2px; background: var(--grad); width: 78%; }
-
-  .kill-badge { text-align: center; padding: 8px; border-radius: 5px; font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; background: rgba(90,122,153,0.15); border: 1px solid var(--border); color: var(--text-dim); margin-top: 4px; }
-
-  /* ── SCAN LINE EFFECT ── */
-  body::after {
-    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
-  }
-
-  /* grid bg */
-  .main::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image: linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-  .content, .topbar, .stat-grid, .tabs, .panel, .center-panel { position: relative; z-index:1; }
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px);}
 </style>
 </head>
 <body>
+<canvas id="bgc"></canvas>
 
 <!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="sidebar-brand">
-    <div class="brand-icon">MX1</div>
-    <div>
-      <div class="brand-name">MX1</div>
-      <div class="brand-sub">Fusion Autonomy</div>
-    </div>
-    <div class="status-dot"></div>
+<aside class="sb">
+  <div class="sb-brand">
+    <div class="b-ico">MX1</div>
+    <div><div class="b-name">MX1</div><div class="b-sub">Fusion Autonomy</div></div>
+    <div class="sdot"></div>
   </div>
-
-  <div class="sidebar-section">Navigation</div>
-  <div class="nav-item"><span class="nav-icon">⊞</span> Dashboard</div>
-  <div class="nav-item active"><span class="nav-icon">◈</span> Overview</div>
-  <div class="nav-item"><span class="nav-icon">◫</span> Portfolio</div>
-  <div class="nav-item"><span class="nav-icon">⚙</span> Settings</div>
-
-  <div class="sidebar-footer">
-    <div class="sys-row"><span class="sys-label">Agents:</span><span class="sys-val">12/15</span></div>
-    <div class="sys-row"><span class="sys-label">Fusion:</span><span class="sys-val online">Online</span></div>
-    <div class="sys-row"><span class="sys-label">Kill Switch:</span><span class="sys-val off">Off</span></div>
-    <div class="logout">↩ &nbsp;Logout</div>
+  <div class="sb-sec">Navigation</div>
+  <div class="ni"><span class="ni-ico">⊞</span> Dashboard</div>
+  <div class="ni act"><span class="ni-ico">◈</span> Overview</div>
+  <div class="ni"><span class="ni-ico">◫</span> Portfolio</div>
+  <div class="ni"><span class="ni-ico">⚙</span> Settings</div>
+  <div class="sb-ft">
+    <div class="sr"><span class="sk">Agents:</span><span class="sv">12/15</span></div>
+    <div class="sr"><span class="sk">Fusion:</span><span class="sv on">Online</span></div>
+    <div class="sr"><span class="sk">Kill Switch:</span><span class="sv off">Off</span></div>
+    <div class="lo">↩ &nbsp;Logout</div>
   </div>
 </aside>
 
 <!-- MAIN -->
-<div class="main">
-
+<div class="mn">
   <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="logo-ring"><span>MX1</span></div>
-    <div class="logo-text">MX1</div>
-    <div class="clock"><div class="clock-dot"></div><span id="clock">22:54:14 UTC</span></div>
-    <div class="balance-block">
-      <div class="bal-label">Total Balance</div>
-      <div class="bal-val">$0</div>
-      <div class="bal-sub">Trading: $0 | Funding: $0</div>
-    </div>
-    <div class="pnl-block">
-      <div class="bal-label">24h PnL</div>
-      <div class="pnl-pos">▲ +0.00%</div>
-    </div>
-    <div class="topbar-right">
-      <div class="bal-label" style="color:var(--text-dim);font-size:11px;">Mode:</div>
-      <div class="mode-toggle">
-        <div class="mode-btn active">AI Auto</div>
-        <div class="mode-btn">AI Manual</div>
-      </div>
-      <div class="badge badge-online"><div class="badge-dot"></div> Fusion Online</div>
-      <div class="badge badge-kill"><div class="badge-dot"></div> Kill Switch</div>
-      <button class="connect-btn">Connect Wallet</button>
-      <div class="bell">🔔</div>
+  <div class="tb">
+    <div class="lr"><span>MX1</span></div>
+    <div class="lt">MX1</div>
+    <div class="clk"><div class="cdot"></div><span id="clock">00:00:00 UTC</span></div>
+    <div class="bb"><div class="bl">Total Balance</div><div class="bv">$0</div><div class="bs">Trading: $0 | Funding: $0</div></div>
+    <div class="pb"><div class="bl">24h PnL</div><div class="pp">▲ +0.00%</div></div>
+    <div class="tr">
+      <span style="font-size:10px;color:var(--text-dim);">Mode:</span>
+      <div class="mt"><div class="mb act">AI Auto</div><div class="mb">AI Manual</div></div>
+      <div class="bdg bon"><div class="bd"></div>Fusion Online</div>
+      <div class="bdg bkl"><div class="bd"></div>Kill Switch</div>
+      <button class="cb">Connect Wallet</button>
+      <span style="color:var(--text-dim);font-size:15px;cursor:pointer;">🔔</span>
     </div>
   </div>
 
   <!-- CONTENT -->
-  <div class="content">
-    <div class="center-panel">
-
+  <div class="ct">
+    <div class="cp">
       <!-- STAT CARDS -->
-      <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-label">Total Balance <span class="stat-icon">⚡</span></div>
-          <div class="stat-val">$0</div>
-          <div class="stat-sub">Trading: $0 | Funding: $0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Unrealized PNL <span class="stat-icon">↗</span></div>
-          <div class="stat-val green">$+0.00</div>
-          <div class="stat-sub">+0.00%</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Open Positions <span class="stat-icon">⚡</span></div>
-          <div class="stat-val">0</div>
-          <div class="stat-sub">&nbsp;</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Fusion Risk Level <span class="stat-icon">⚠</span></div>
-          <div class="stat-val pink">Medium</div>
-          <div class="stat-sub">&nbsp;</div>
-        </div>
+      <div class="sg">
+        <div class="sc"><div class="sl">Total Balance <span>⚡</span></div><div class="sv2">$0</div><div class="ss">Trading: $0 | Funding: $0</div></div>
+        <div class="sc"><div class="sl">Unrealized PNL <span>↗</span></div><div class="sv2 g">$+0.00</div><div class="ss">+0.00%</div></div>
+        <div class="sc"><div class="sl">Open Positions <span>⚡</span></div><div class="sv2">0</div><div class="ss">&nbsp;</div></div>
+        <div class="sc"><div class="sl">Fusion Risk Level <span>⚠</span></div><div class="sv2 pk">Medium</div><div class="ss">&nbsp;</div></div>
       </div>
 
       <!-- TABS -->
@@ -332,157 +210,216 @@
         <div class="tab">Live Feed</div>
         <div class="tab">Analytics (Today)</div>
         <div class="tab">Fusion Performance</div>
-        <div class="tab active">Manual Fusion Run</div>
+        <div class="tab act">Manual Fusion Run</div>
       </div>
 
-      <!-- MANUAL FUSION RUN PANEL -->
-      <div class="panel">
-        <div class="panel-header">⚡ Manual Fusion Run</div>
-        <div class="panel-body">
-          <div class="form-grid">
-            <div class="form-group">
-              <label class="form-label">Trading Pair</label>
-              <select class="form-control"><option>BTC/USDT</option><option>ETH/USDT</option><option>SOL/USDT</option></select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Timeframe</label>
-              <select class="form-control"><option>1 Hour</option><option>4 Hour</option><option>1 Day</option></select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Days (Optional)</label>
-              <input class="form-control" placeholder="e.g., 7" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Risk Tolerance</label>
-              <select class="form-control"><option>Medium</option><option>Low</option><option>High</option></select>
-            </div>
+      <!-- MANUAL FUSION RUN -->
+      <div class="pnl">
+        <div class="ph">⚡ Manual Fusion Run</div>
+        <div class="pb2">
+          <div class="fg">
+            <div class="fgrp"><label class="fl">Trading Pair</label><select class="fc"><option>BTC/USDT</option><option>ETH/USDT</option><option>SOL/USDT</option></select></div>
+            <div class="fgrp"><label class="fl">Timeframe</label><select class="fc"><option>1 Hour</option><option>4 Hour</option><option>1 Day</option></select></div>
+            <div class="fgrp"><label class="fl">Days (Optional)</label><input class="fc" placeholder="e.g., 7"/></div>
+            <div class="fgrp"><label class="fl">Risk Tolerance</label><select class="fc"><option>Medium</option><option>Low</option><option>High</option></select></div>
           </div>
-          <div class="form-grid2">
-            <div class="form-group">
-              <label class="form-label">Minimum Notional $</label>
-              <input class="form-control" placeholder="e.g., $10" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Maximum Notional $</label>
-              <input class="form-control" placeholder="e.g., $100" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Maximum Leverage</label>
-              <input class="form-control" placeholder="e.g., 20" />
-            </div>
+          <div class="fg2">
+            <div class="fgrp"><label class="fl">Minimum Notional $</label><input class="fc" placeholder="e.g., $10"/></div>
+            <div class="fgrp"><label class="fl">Maximum Notional $</label><input class="fc" placeholder="e.g., $100"/></div>
+            <div class="fgrp"><label class="fl">Maximum Leverage</label><input class="fc" placeholder="e.g., 20"/></div>
           </div>
-          <button class="run-btn">▷ &nbsp; RUN FUSION CYCLE</button>
+          <button class="rb">▷ &nbsp;RUN FUSION CYCLE</button>
         </div>
       </div>
 
-      <!-- AI EXPLANATION PANEL (separate) -->
-      <div class="panel">
-        <div class="panel-header"><span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">◈</span> AI Explanation</div>
-        <div class="panel-body">
-          <div class="agent-row">
-            <div class="agent-dot" style="background:var(--blue-light)"></div>
-            <div><span class="agent-name blue">Technical Agent</span><span class="agent-desc"> analyzes chart patterns and indicators.</span></div>
-          </div>
-          <div class="agent-row">
-            <div class="agent-dot" style="background:var(--cyan)"></div>
-            <div><span class="agent-name cyan">Social Buzz Agent</span><span class="agent-desc"> tracks social sentiment and mentions.</span></div>
-          </div>
-          <div class="agent-row">
-            <div class="agent-dot" style="background:var(--teal)"></div>
-            <div><span class="agent-name teal">Risk Management Agent</span><span class="agent-desc"> evaluates volatility and risk metrics.</span></div>
-          </div>
-          <div class="agent-row">
-            <div class="agent-dot" style="background:var(--green)"></div>
-            <div><span class="agent-name green">Whale Wallet Agent</span><span class="agent-desc"> monitors large wallet movements.</span></div>
-          </div>
-          <div class="ai-note">Run a <b>Manual Fusion</b> above to see detailed analysis from all agents.</div>
-          <div class="ai-footer">"Fusion decisions are autonomous but explainable — each agent's voice forms the final signal."</div>
+      <!-- AI EXPLANATION -->
+      <div class="pnl">
+        <div class="ph"><span style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">◈</span> AI Explanation</div>
+        <div class="pb2">
+          <div class="ar"><div class="adot" style="background:var(--blue-light)"></div><div><span class="an b">Technical Agent</span><span class="ad"> analyzes chart patterns and indicators.</span></div></div>
+          <div class="ar"><div class="adot" style="background:var(--cyan)"></div><div><span class="an c">Social Buzz Agent</span><span class="ad"> tracks social sentiment and mentions.</span></div></div>
+          <div class="ar"><div class="adot" style="background:var(--teal)"></div><div><span class="an t">Risk Management Agent</span><span class="ad"> evaluates volatility and risk metrics.</span></div></div>
+          <div class="ar"><div class="adot" style="background:var(--green)"></div><div><span class="an g2">Whale Wallet Agent</span><span class="ad"> monitors large wallet movements.</span></div></div>
+          <div class="anote">Run a <b>Manual Fusion</b> above to see detailed analysis from all agents.</div>
+          <div class="afoot">"Fusion decisions are autonomous but explainable — each agent's voice forms the final signal."</div>
         </div>
       </div>
-
-    </div><!-- /center-panel -->
+    </div>
 
     <!-- RIGHT PANEL -->
-    <aside class="right-panel">
-      <div style="padding:14px;border-bottom:1px solid var(--border);">
-        <div style="font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Fusion Control Center</div>
+    <aside class="rp">
+      <div style="padding:13px;border-bottom:1px solid var(--gbl);">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Fusion Control Center</div>
       </div>
-
-      <div class="rp-section">
-        <div class="rp-title"><span class="rp-title-icon">⚡</span> Quick Execute</div>
-        <div class="rp-label">Symbol</div>
-        <select class="rp-select"><option>BTCUSDT</option><option>ETHUSDT</option><option>SOLUSDT</option></select>
-        <div class="rp-row">
-          <div>
-            <div class="rp-label">Entry</div>
-            <input class="rp-input" value="Market" />
-          </div>
-          <div>
-            <div class="rp-label">Stop Loss</div>
-            <input class="rp-input" placeholder="—" />
-          </div>
+      <div class="rps">
+        <div class="rpt"><span class="rptg">⚡</span> Quick Execute</div>
+        <div class="rpl">Symbol</div>
+        <select class="rs"><option>BTCUSDT</option><option>ETHUSDT</option><option>SOLUSDT</option></select>
+        <div class="rr">
+          <div><div class="rpl">Entry</div><input class="ri" value="Market"/></div>
+          <div><div class="rpl">Stop Loss</div><input class="ri" placeholder="—"/></div>
         </div>
-        <div class="rp-row">
-          <div>
-            <div class="rp-label">Take Profit</div>
-            <input class="rp-input" placeholder="—" />
-          </div>
-          <div>
-            <div class="rp-label">Leverage</div>
-            <input class="rp-input" value="10" />
-          </div>
+        <div class="rr">
+          <div><div class="rpl">Take Profit</div><input class="ri" placeholder="—"/></div>
+          <div><div class="rpl">Leverage</div><input class="ri" value="10"/></div>
         </div>
-        <div class="rp-label">Quantity (USDT)</div>
-        <input class="rp-input" style="width:100%;margin-bottom:10px;" placeholder="—" />
-        <button class="place-btn">PLACE ORDER</button>
+        <div class="rpl">Quantity (USDT)</div>
+        <input class="ri" style="width:100%;margin-bottom:9px;" placeholder="—"/>
+        <button class="plb">PLACE ORDER</button>
       </div>
-
-      <div class="rp-section">
-        <div class="rp-title"><span class="rp-title-icon">⚡</span> Fusion Health</div>
-        <div class="health-row"><span class="health-key">Agents Active:</span><span class="health-val">12/15</span></div>
-        <div class="health-row"><span class="health-key">Avg Confidence:</span><span class="health-val cyan">78%</span></div>
-        <div class="health-row"><span class="health-key">Next Cycle:</span><span class="health-val green">45s</span></div>
-        <div class="health-bar"><div class="health-fill"></div></div>
+      <div class="rps">
+        <div class="rpt"><span class="rptg">⚡</span> Fusion Health</div>
+        <div class="hr"><span class="hk">Agents Active:</span><span class="hv">12/15</span></div>
+        <div class="hr"><span class="hk">Avg Confidence:</span><span class="hv c">78%</span></div>
+        <div class="hr"><span class="hk">Next Cycle:</span><span class="hv g">45s</span></div>
+        <div class="hbar"><div class="hfill"></div></div>
       </div>
-
-      <div class="rp-section">
-        <div class="rp-title"><span style="color:var(--pink)">⚠</span> Kill Switch</div>
-        <div class="rp-label">Override Control</div>
-        <div class="kill-badge">INACTIVE</div>
+      <div class="rps">
+        <div class="rpt"><span style="color:var(--pink)">⚠</span> Kill Switch</div>
+        <div class="rpl">Override Control</div>
+        <div class="kbdg">INACTIVE</div>
       </div>
     </aside>
   </div>
 </div>
 
 <script>
-  function updateClock() {
-    const now = new Date();
-    const h = String(now.getUTCHours()).padStart(2,'0');
-    const m = String(now.getUTCMinutes()).padStart(2,'0');
-    const s = String(now.getUTCSeconds()).padStart(2,'0');
-    document.getElementById('clock').textContent = `${h}:${m}:${s} UTC`;
-  }
-  updateClock();
-  setInterval(updateClock, 1000);
+/* CLOCK */
+function tick(){
+  const n=new Date();
+  document.getElementById('clock').textContent=[n.getUTCHours(),n.getUTCMinutes(),n.getUTCSeconds()].map(v=>String(v).padStart(2,'0')).join(':')+' UTC';
+}
+tick(); setInterval(tick,1000);
 
-  document.querySelectorAll('.tab').forEach(t => {
-    t.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-      t.classList.add('active');
-    });
+/* UI */
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('act'));t.classList.add('act');});
+document.querySelectorAll('.mb').forEach(b=>b.onclick=()=>{document.querySelectorAll('.mb').forEach(x=>x.classList.remove('act'));b.classList.add('act');});
+document.querySelectorAll('.ni').forEach(n=>n.onclick=()=>{document.querySelectorAll('.ni').forEach(x=>x.classList.remove('act'));n.classList.add('act');});
+
+/* 3D BACKGROUND */
+(function(){
+  const canvas=document.getElementById('bgc');
+  const W=window.innerWidth, H=window.innerHeight;
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(W,H);
+  renderer.setClearColor(0x06090f,1);
+
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(45,W/H,0.1,200);
+  cam.position.set(0,0,22);
+
+  /* -- Letters built from ExtrudeGeometry -- */
+  const eo={depth:1.8,bevelEnabled:true,bevelSize:0.1,bevelThickness:0.08,bevelSegments:4};
+
+  /* M */
+  function shapeM(){
+    const s=new THREE.Shape();
+    s.moveTo(0,0);s.lineTo(0,6);s.lineTo(1.1,6);s.lineTo(2.6,3.6);
+    s.lineTo(4.1,6);s.lineTo(5.2,6);s.lineTo(5.2,0);s.lineTo(4.1,0);
+    s.lineTo(4.1,3.8);s.lineTo(2.6,2.0);s.lineTo(1.1,3.8);s.lineTo(1.1,0);s.closePath();
+    return s;
+  }
+  /* X */
+  function shapeX(){
+    const s=new THREE.Shape();
+    s.moveTo(0,5);s.lineTo(1.1,6);s.lineTo(3.0,3.6);s.lineTo(4.9,6);
+    s.lineTo(6.0,5);s.lineTo(3.9,3.0);s.lineTo(6.0,1.0);s.lineTo(4.9,0);
+    s.lineTo(3.0,2.4);s.lineTo(1.1,0);s.lineTo(0,1.0);s.lineTo(2.1,3.0);s.closePath();
+    return s;
+  }
+  /* 1 — two pieces */
+  function shape1a(){
+    const s=new THREE.Shape();
+    s.moveTo(1.0,4.4);s.lineTo(2.2,6);s.lineTo(3.4,6);s.lineTo(3.4,1.0);s.lineTo(2.0,1.0);s.lineTo(2.0,4.4);s.closePath();
+    return s;
+  }
+  function shape1b(){
+    const s=new THREE.Shape();
+    s.moveTo(0.6,0);s.lineTo(4.6,0);s.lineTo(4.6,1.0);s.lineTo(0.6,1.0);s.closePath();
+    return s;
+  }
+
+  const gM=new THREE.ExtrudeGeometry(shapeM(),eo);
+  const gX=new THREE.ExtrudeGeometry(shapeX(),eo);
+  const g1a=new THREE.ExtrudeGeometry(shape1a(),eo);
+  const g1b=new THREE.ExtrudeGeometry(shape1b(),eo);
+
+  /* gradient materials */
+  const mM=new THREE.MeshPhongMaterial({color:0x3a6fe8,emissive:0x1a3a88,emissiveIntensity:0.4,shininess:120,transparent:true,opacity:0.88});
+  const mX=new THREE.MeshPhongMaterial({color:0x00c8ff,emissive:0x006688,emissiveIntensity:0.4,shininess:120,transparent:true,opacity:0.88});
+  const m1=new THREE.MeshPhongMaterial({color:0x00d4aa,emissive:0x005544,emissiveIntensity:0.5,shininess:120,transparent:true,opacity:0.88});
+
+  const meshM=new THREE.Mesh(gM,mM);
+  const meshX=new THREE.Mesh(gX,mX);
+  const mesh1a=new THREE.Mesh(g1a,m1);
+  const mesh1b=new THREE.Mesh(g1b,m1);
+
+  /* spacing: M 5.2 wide, gap 1.2, X 6 wide, gap 1.2, 1 4.6 wide → total ~19.2, center at 0 */
+  const totalW=5.2+1.2+6.0+1.2+4.6; // 18.2
+  const ox=-totalW/2;
+  meshM.position.set(ox,-3,0);
+  meshX.position.set(ox+5.2+1.2,-3,0);
+  mesh1a.position.set(ox+5.2+1.2+6.0+1.2,-3,0);
+  mesh1b.position.set(ox+5.2+1.2+6.0+1.2,-3,0);
+
+  const group=new THREE.Group();
+  group.add(meshM,meshX,mesh1a,mesh1b);
+  scene.add(group);
+
+  /* edge wireframe overlay for a cyber feel */
+  function wireOf(geo,mat){
+    const eg=new THREE.EdgesGeometry(geo,15);
+    return new THREE.LineSegments(eg,mat);
+  }
+  const wMat=new THREE.LineBasicMaterial({color:0x00c8ff,transparent:true,opacity:0.18});
+  const wM=wireOf(gM,wMat); wM.position.copy(meshM.position);
+  const wX=wireOf(gX,wMat); wX.position.copy(meshX.position);
+  const w1a=wireOf(g1a,wMat); w1a.position.copy(mesh1a.position);
+  const w1b=wireOf(g1b,wMat); w1b.position.copy(mesh1b.position);
+  scene.add(wM,wX,w1a,w1b);
+
+  /* particles */
+  const pc=320, pg=new THREE.BufferGeometry();
+  const pp=new Float32Array(pc*3);
+  for(let i=0;i<pc*3;i++) pp[i]=(Math.random()-0.5)*(i%3===2?30:80);
+  pg.setAttribute('position',new THREE.BufferAttribute(pp,3));
+  scene.add(new THREE.Points(pg,new THREE.PointsMaterial({color:0x00c8ff,size:0.07,transparent:true,opacity:0.35})));
+
+  /* lights */
+  scene.add(new THREE.AmbientLight(0x0a1828,1.5));
+  const dl1=new THREE.DirectionalLight(0x4488ff,3); dl1.position.set(-12,8,12); scene.add(dl1);
+  const dl2=new THREE.DirectionalLight(0x00ff99,2.5); dl2.position.set(12,-6,8); scene.add(dl2);
+  const pl=new THREE.PointLight(0x00c8ff,4,50); pl.position.set(0,2,12); scene.add(pl);
+
+  window.addEventListener('resize',()=>{
+    cam.aspect=window.innerWidth/window.innerHeight;
+    cam.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
   });
-  document.querySelectorAll('.mode-btn').forEach(b => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-    });
+
+  let mx=0,my=0;
+  document.addEventListener('mousemove',e=>{
+    mx=(e.clientX/window.innerWidth-0.5)*1.2;
+    my=-(e.clientY/window.innerHeight-0.5)*0.7;
   });
-  document.querySelectorAll('.nav-item').forEach(n => {
-    n.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
-      n.classList.add('active');
-    });
-  });
+
+  let t=0;
+  (function loop(){
+    requestAnimationFrame(loop);
+    t+=0.006;
+    group.rotation.y=Math.sin(t*0.35)*0.3+mx*0.35;
+    group.rotation.x=Math.sin(t*0.28)*0.12+my*0.25;
+    group.position.y=Math.sin(t*0.5)*0.4;
+    /* pulse emissive */
+    const pu=(Math.sin(t*2)+1)/2;
+    mM.emissiveIntensity=0.25+pu*0.35;
+    mX.emissiveIntensity=0.25+pu*0.3;
+    m1.emissiveIntensity=0.3+pu*0.35;
+    pl.intensity=3+pu*2;
+    renderer.render(scene,cam);
+  })();
+})();
 </script>
 </body>
 </html>
