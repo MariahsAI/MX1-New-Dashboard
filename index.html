@@ -319,9 +319,9 @@ document.querySelectorAll('.ni').forEach(n=>n.onclick=()=>{document.querySelecto
     return mesh;
   }
   const orb1=orb(0x1a4bcc,-9, 3,-8,3.5);   /* blue left */
-  const orb2=orb(0x00c8ff, 0,-2,-10,4.5);  /* cyan center */
-  const orb3=orb(0x00d4aa, 8, 4,-6,3.0);   /* teal right */
-  const orb4=orb(0x00e87a,-4,-5,-12,2.5);  /* green bottom */
+  const orb2=orb(0x00c8ff, 0,-2,-10,3.5);  /* cyan center */
+  const orb3=orb(0x006655, 8, 4,-12,2.0);  /* teal right - much darker + further back */
+  const orb4=orb(0x004433,-4,-5,-16,1.5);  /* green bottom - very subtle */
 
   /* ── LOGO PLANES ── */
   const group=new THREE.Group();
@@ -393,10 +393,10 @@ document.querySelectorAll('.ni').forEach(n=>n.onclick=()=>{document.querySelecto
     /* orb pulse */
     const pu=(Math.sin(t*1.6)+1)/2;
     const pu2=(Math.sin(t*1.6+1)+1)/2;
-    orb1.material.opacity=0.4+pu*0.25;
-    orb2.material.opacity=0.35+pu2*0.3;
-    orb3.material.opacity=0.38+pu*0.22;
-    orb4.material.opacity=0.32+pu2*0.2;
+    orb1.material.opacity=0.4+pu*0.2;
+    orb2.material.opacity=0.3+pu2*0.2;
+    orb3.material.opacity=0.18+pu*0.08;
+    orb4.material.opacity=0.12+pu2*0.06;
     /* slow orb drift */
     orb1.position.x=-9+Math.sin(t*0.3)*1.5;
     orb3.position.x= 8+Math.sin(t*0.4)*1.2;
